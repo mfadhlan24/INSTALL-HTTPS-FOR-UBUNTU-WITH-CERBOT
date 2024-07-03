@@ -92,6 +92,11 @@ sudo certbot certonly --nginx
 ```
 ### Ubah Lagi di /etc/nginx/sites-available pangil aja nano
 ini tuh versi yang udah di ubah mengatur portnya ke 443
+### Sesuaikan Dengan Nama Appmu
+```bash
+nano /etc/nginx/sites-available/app1
+```
+### Ganti Menjadi ini 
 ```bash
 server {
     listen 443 ssl; # managed by Certbot
