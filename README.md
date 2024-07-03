@@ -18,6 +18,16 @@ sudo apt install snapd
 ```bash
 sudo snap install nginx
 ```
+### 2.1 Instalasi Nginx Menggunakan APT
+
+```bash
+sudo apt install nginx
+```
+# 2.1.1 Start Nginx 
+```bash
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
 ## Konfigurasi Nginx
 ### 1.Buat konfigurasi untuk situs Anda di /etc/nginx/sites-available/.
 ```bash
