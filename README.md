@@ -54,6 +54,7 @@ server {
 ```
 ## Konf UFW dulu agar bsa pakai http dan HTTPS
 ```bash
+sudo ufw enable
 sudo ufw allow 'Nginx Full'
 sudo ufw reload
 ```
