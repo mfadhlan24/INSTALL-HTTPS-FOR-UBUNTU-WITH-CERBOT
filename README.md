@@ -171,13 +171,13 @@ sudo systemctl reload nginx
 ## 1. Menyiapkan Nginx untuk Domain Baru
 ### Buat file konfigurasi baru untuk domain Anda di direktori /etc/nginx/sites-available/. Misalnya, jika domain Anda adalah newdomain.com, buat file newdomain.com:
 ```bash
-sudo nano /etc/nginx/sites-available/newdomain.com
+sudo nano /etc/nginx/sites-available/appname
 ```
 ### Isi file tersebut dengan konfigurasi dasar untuk domain baru:
 ```bash
 server {
     listen 80;
-    server_name newdomain.com www.newdomain.com;
+    server_name newdomain.com;
 
     location / {
         proxy_pass http://localhost:2006;
@@ -193,17 +193,23 @@ server {
 ```
 ### Aktifkan situs dengan membuat symbolic link ke direktori sites-enabled:
 ```bash
-sudo ln -s /etc/nginx/sites-available/newdomain.com /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/appname /etc/nginx/sites-enabled/
 ```
-## 2. Mendapatkan Sertifikat SSL Menggunakan Certbot
+## 2. Verifikasi bahwa symbolic link telah dibuat dengan benar
+### Anda harus melihat link mc-jkt.lanzzstore.com yang mengarah ke file di sites-available.
+```bash
+ls -l /etc/nginx/sites-enabled/
+```
+## 3. Uji Conf Nginx & Reload Nginx
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+## 4. Mendapatkan Sertifikat SSL Menggunakan Certbot
 ### Instal Certbot dan plugin Nginx jika belum!
 ### Jalankan Certbot untuk mendapatkan sertifikat SSL untuk domain baru Anda:
 ```bash
 sudo certbot --nginx -d newdomain.com
-```
-## 3. Reload Nginx
-```bash
-sudo systemctl reload nginx
 ```
 # Note : Udah si gitu aja yang penting kelen baca aja ya klu ada eror tanya starkoverflow / chatgpt. Maaf kalau ada yang kurang. Terima Kasih
 
