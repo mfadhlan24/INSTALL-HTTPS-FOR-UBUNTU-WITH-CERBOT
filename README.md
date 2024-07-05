@@ -167,6 +167,44 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
+# Cara Mendaftarkan Domain Baru Pada NGINX dan CERTBOT
+## 1. Menyiapkan Nginx untuk Domain Baru
+### Buat file konfigurasi baru untuk domain Anda di direktori /etc/nginx/sites-available/. Misalnya, jika domain Anda adalah newdomain.com, buat file newdomain.com:
+```bash
+sudo nano /etc/nginx/sites-available/newdomain.com
+```
+### Isi file tersebut dengan konfigurasi dasar untuk domain baru:
+```bash
+server {
+    listen 80;
+    server_name newdomain.com www.newdomain.com;
+
+    location / {
+        proxy_pass http://localhost:2006;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+### Aktifkan situs dengan membuat symbolic link ke direktori sites-enabled:
+```bash
+sudo ln -s /etc/nginx/sites-available/newdomain.com /etc/nginx/sites-enabled/
+```
+## 2. Mendapatkan Sertifikat SSL Menggunakan Certbot
+### Instal Certbot dan plugin Nginx jika belum!
+### Jalankan Certbot untuk mendapatkan sertifikat SSL untuk domain baru Anda:
+```bash
+sudo certbot --nginx -d newdomain.com
+```
+## 3. Reload Nginx
+```bash
+sudo systemctl reload nginx
+```
 # Note : Udah si gitu aja yang penting kelen baca aja ya klu ada eror tanya starkoverflow / chatgpt. Maaf kalau ada yang kurang. Terima Kasih
 
 
