@@ -138,5 +138,36 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 ```
+### Kalau Bisa Jangan Logout Dulu Dari Vps, Karena takut tidak bisa login di port 22
+
+#Jika VPS Anda tidak dapat diakses melalui port 22 (SSH) setelah menginstal Nginx dan Certbot, ada beberapa langkah yang dapat Anda coba untuk mengatasi masalah ini:
+
+1. Periksa Status SSH Service
+Pastikan layanan SSH (OpenSSH) berjalan dengan benar di server Anda. Jalankan perintah berikut untuk memeriksa status layanan SSH:
+```bash
+sudo systemctl status ssh
+```
+#Jika layanan tidak berjalan, mulai ulang dengan perintah berikut:
+```bash
+sudo systemctl start ssh
+sudo systemctl enable ssh
+```
+2. Periksa Konfigurasi Firewall
+Pastikan firewall tidak memblokir port 22. Jika Anda menggunakan UFW, buka port 22 dengan perintah berikut:
+```bash
+sudo ufw allow 22/tcp
+sudo ufw reload
+```
+##Pastikan konfigurasi Nginx tidak mempengaruhi akses SSH. Biasanya, Nginx seharusnya tidak mempengaruhi port 22, tetapi pastikan tidak ada kesalahan konfigurasi yang aneh. Jalankan perintah berikut untuk memeriksa konfigurasi Nginx:
+```bash
+sudo nginx -t
+```
+#Jika ada kesalahan, perbaiki dan muat ulang Nginx dengan perintah berikut:
+```bash
+sudo systemctl reload nginx
+```
 
 # Note : Udah si gitu aja yang penting kelen baca aja ya klu ada eror tanya starkoverflow / chatgpt. Maaf kalau ada yang kurang. Terima Kasih
+
+
+
