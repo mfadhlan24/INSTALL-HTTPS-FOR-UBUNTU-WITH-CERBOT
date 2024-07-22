@@ -99,16 +99,24 @@ nano /etc/nginx/sites-available/app1
 ### Ganti Menjadi ini 
 ```bash
 server {
-    listen 443 ssl; # managed by Certbot
-    server_name app1.kocak.my.id;
-
-    ssl_certificate /etc/letsencrypt/live/app1.kocak.my.id/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/app1.kocak.my.id/privkey.pem; # managed by Certbot
-    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    server_name nameserver.com;
 
     location / {
-        proxy_pass http://localhost:2005;
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, PATCH, DELETE';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Accept';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, PATCH, DELETE';
+        add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, Accept';
+
+        proxy_pass http://localhost:2006;  # Mengarahkan permintaan ke server app.js
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -116,18 +124,24 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_cache_bypass $http_upgrade;
+        proxy_set_header Authorization $http_authorization;  # Meneruskan header Authorization
     }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/nameserver.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/nameserver.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 server {
-    listen 80;
-    server_name app1.kocak.my.id;
-
-    if ($host = app1.kocak.my.id) {
-        return 301 https://$host$request_uri;
+    if ($host = nameserver.com) {
+        return 301 https://$host$request_uri; # Mengarahkan HTTP ke HTTPS
     } # managed by Certbot
 
-    return 404; # managed by Certbot
+    listen 80;
+    server_name nameserver.com;
+    return 404; # Jika tidak bisa mengalihkan, kembali dengan 404
 }
 
 ```
