@@ -87,8 +87,25 @@ sudo certbot certonly --nginx
 ```
 4. Automatic renewal..
 ```bash
-sudo certbot --nginx
-sudo certbot certonly --nginx
+Untuk mengotomatisasi pembaruan sertifikat SSL menggunakan Certbot, Anda dapat mengatur cron job atau menggunakan systemd timer. Berikut adalah langkah-langkah untuk memastikan Certbot melakukan pembaruan otomatis:
+
+1. Menggunakan Cron Job untuk Automatisasi
+Certbot biasanya menambahkan entri cron saat instalasi, tetapi jika tidak ada, Anda bisa menambahkannya secara manual.
+
+Langkah-langkah Mengatur Cron Job:
+Buka Crontab untuk Root: Jalankan perintah berikut untuk mengedit crontab pengguna root:
+
+bash
+Copy code
+sudo crontab -e
+Tambahkan Entri Pembaruan Certbot: Tambahkan baris berikut ke crontab untuk memperbarui sertifikat dua kali sehari. Ini akan memastikan bahwa sertifikat diperbarui tepat waktu sebelum kedaluwarsa.
+
+bash
+Copy code
+0 */12 * * * certbot renew --quiet
+0 */12 * * *: Menjadwalkan cron job ini untuk berjalan setiap 12 jam.
+certbot renew --quiet: Memerintahkan Certbot untuk memperbarui sertifikat secara otomatis dan --quiet memastikan proses berjalan tanpa output kecuali jika ada error.
+Simpan dan Keluar: Simpan perubahan di editor crontab dan keluar.
 ```
 ### Ubah Lagi di /etc/nginx/sites-available pangil aja nano
 ini tuh versi yang udah di ubah mengatur portnya ke 443
